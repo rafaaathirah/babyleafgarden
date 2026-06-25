@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Leaf Co</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          emerald: {
+            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+            400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+            800: '#166534', 900: '#14532d', 950: '#022c22',
+          },
+          mint: { 50: '#f4fbf7', 100: '#e6f7ed', 200: '#cfeedd', 300: '#a3e0be' }
+        },
+        fontFamily: { display: ['Playfair Display', 'serif'], body: ['Inter', 'sans-serif'] }
+      }
+    }
+  }
+  </script>
+  <style>
+  .stat-bar-fill { transition: width 0.4s ease-out; }
+  .btn-action { transition: all 0.2s ease-in-out; }
+  .btn-action:hover { transform: translateY(-2px); }
+  .btn-action:active { transform: translateY(0px) scale(0.98); }
+  .message-toast { animation: toastSlide 2.5s ease-in-out forwards; }
+  @keyframes toastSlide { 
+    0% { transform: translate(-50%, 20px); opacity: 0; }
+    15% { transform: translate(-50%, 0); opacity: 1; }
+    85% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, -20px); opacity: 0; }
+  }
+  .modal-backdrop { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(2, 44, 34, 0.45); backdrop-filter: blur(8px); }
+  .modal-backdrop.show { display: flex; }
+  </style>
+</head>
+<body class="font-body bg-mint-50 text-emerald-950">
+
+  <section id="game" class="min-h-screen bg-gradient-to-tr from-emerald-50 to-teal-100 py-12 flex flex-col items-center justify-center relative">
+    <div class="text-center mb-8 max-w-md mx-auto px-4">
+      <div class="flex justify-center mb-4">
+       <img src="babyleafgardenlogo.jpeg" alt="Babyleaf Garden Logo" class="h-20 w-auto object-contain">
+      </div>
+      <h1 class="font-display text-4xl md:text-5xl font-bold text-emerald-900 mb-2 flex items-center justify-center gap-2">
+        Babyleaf Garden 🌿
+      </h1>
+      <p class="text-emerald-700 font-medium text-sm md:text-base">Grow your own aesthetic indoor paradise one drop at a time.</p>
+    </div>
+
+    <div class="container mx-auto px-4 max-w-5xl">
+      <!-- Halaman 0: Welcome Screen -->
+      <div id="welcomePage" class="bg-white rounded-3xl shadow-xl p-10 max-w-xl mx-auto text-center border border-emerald-100/50 transition-all duration-300">
+        <div class="text-5xl mb-4">🪴</div>
+        <h2 class="font-display text-3xl font-bold text-emerald-900 mb-3">Welcome to Babyleaf Garden</h2>
+        <p class="text-emerald-700 text-sm mb-8 leading-relaxed">Relax, unwind, and nurture beautiful virtual plants. Watch them grow from tiny seedlings into magnificent, blooming marvels.</p>
+        <button id="startGameBtn" class="btn-action bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-600/20 text-sm tracking-wide w-full sm:w-auto">
+          Start Game ✨
+        </button>
+      </div>
+
+      <!-- Halaman 1: Pilih Pokok -->
+      <div id="selectionPage" class="hidden bg-white rounded-3xl shadow-xl p-8 max-w-xl mx-auto text-center border border-emerald-100/50 transition-all duration-300">
+        <div class="flex justify-center mb-2 text-3xl">🥰</div>
+        <h2 class="font-display text-3xl font-bold text-emerald-900 mb-6">Choose Your Plant</h2>
+        <div class="grid gap-4 text-left">
+          <button class="plant-choice btn-action p-4 rounded-2xl border border-emerald-200 hover:border-emerald-500 bg-mint-50/50 hover:bg-white flex items-center gap-4 shadow-sm text-left w-full" data-plant="monstera">
+            <img src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=120&h=120&q=80" alt="Monstera Real" class="w-16 h-16 rounded-xl object-cover shadow-inner flex-shrink-0">
+            <div>
+              <div class="font-bold text-lg text-emerald-900">Monstera 🌿</div>
+              <div class="text-sm text-emerald-700/70">Iconic split leaves • Tropical Aesthetic</div>
+            </div>
+          </button>
+          <button class="plant-choice btn-action p-4 rounded-2xl border border-emerald-200 hover:border-emerald-500 bg-mint-50/50 hover:bg-white flex items-center gap-4 shadow-sm text-left w-full" data-plant="peachlily">
+            <img src="https://radhakrishnaagriculture.in/cdn/shop/files/peacelily.jpg?v=1709184309" alt="Peace Lily Real" class="w-16 h-16 rounded-xl object-cover shadow-inner flex-shrink-0">
+            <div>
+              <div class="font-bold text-lg text-emerald-900">Peace Lily 🤍</div>
+              <div class="text-sm text-emerald-700/70">Elegant white blooms • Air purifying vibes</div>
+            </div>
+          </button>
+          <button class="plant-choice btn-action p-4 rounded-2xl border border-emerald-200 hover:border-emerald-500 bg-mint-50/50 hover:bg-white flex items-center gap-4 shadow-sm text-left w-full" data-plant="anthurium">
+            <img src="https://kamegardens.ae/wp-content/uploads/2024/12/0vmyrwdd.png" alt="Anthurium Real" class="w-16 h-16 rounded-xl object-cover shadow-inner flex-shrink-0">
+            <div>
+              <div class="font-bold text-lg text-emerald-900">Anthurium Pink 💕</div>
+              <div class="text-sm text-emerald-700/70">Pink heart-shaped flowers • Bright & exotic</div>
+            </div>
+          </button>
+          <button class="plant-choice btn-action p-4 rounded-2xl border border-emerald-200 hover:border-emerald-500 bg-mint-50/50 hover:bg-white flex items-center gap-4 shadow-sm text-left w-full" data-plant="bonsai">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfGrNbzatbJweJZzQ6O09VyTbWR04yr0Zs61ojS_c0Bz22oH16PGkOhY&s=10" alt="Bonsai Real" class="w-16 h-16 rounded-xl object-cover shadow-inner flex-shrink-0">
+            <div>
+              <div class="font-bold text-lg text-emerald-900">Bonsai Money Tree 🌳</div>
+              <div class="text-sm text-emerald-700/70">Thick braided trunk • Brings luck & wealth</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Halaman 2: Panel Penjagaan Pokok -->
+      <div id="carePage" class="hidden bg-white rounded-3xl shadow-xl overflow-hidden grid md:grid-cols-2 gap-0 border border-emerald-100/50">
+        <div class="bg-gradient-to-b from-mint-50 to-mint-100 p-4 flex flex-col items-center justify-center min-h-[550px] relative">
+          <button id="backToSelectBtn" class="absolute top-4 left-4 bg-white hover:bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-sm border border-emerald-200"> ← Change Plant </button>
+          <canvas id="plantCanvas2D" width="400" height="450" class="max-w-full drop-shadow-md"></canvas>
+          <div id="messageToast" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-emerald-900 text-mint-50 px-4 py-2 rounded-full text-sm font-medium opacity-0 pointer-events-none whitespace-nowrap z-50 shadow-lg"></div>
+          <div id="rewardPopup" class="modal-backdrop">
+            <div class="bg-white rounded-3xl p-6 shadow-2xl max-w-sm mx-4 text-center border border-emerald-100 flex flex-col items-center">
+              <div id="badgeIcon" class="text-4xl mb-1">🏆</div>
+              <h4 id="badgeTitle" class="font-display text-xl font-semibold text-emerald-950 mb-1">Peace & Serenity Emblem!</h4>
+              <p class="text-emerald-600 font-medium text-xs">Level Completed ! The tree grows perfectly. Take a screenshot now to claim your rewards ! 
+                <br>Takes you back to the menu...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-8 bg-white border-l border-emerald-50 flex flex-col justify-center">
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-display text-3xl font-bold text-emerald-950">Plant Status</h3>
+              <span id="plantNameLabel" class="text-sm font-semibold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">No plant selected</span>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1 text-emerald-900"><span>✨ Experience</span><span id="expValue">0/150</span></div>
+              <div class="h-2.5 bg-emerald-50 rounded-full overflow-hidden"><div id="expBar" class="stat-bar-fill h-full bg-teal-400" style="width: 0%"></div></div>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1 text-emerald-900"><span>📈 Level</span><span id="levelValue">0 - Seeds (Biji Benih)</span></div>
+              <div class="h-2.5 bg-emerald-50 rounded-full overflow-hidden"><div id="levelBar" class="stat-bar-fill h-full bg-amber-500" style="width: 0%"></div></div>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1 text-emerald-900"><span>❤️ Happiness</span><span id="happinessValue">0%</span></div>
+              <div class="h-2.5 bg-emerald-50 rounded-full overflow-hidden"><div id="happinessBar" class="stat-bar-fill h-full bg-yellow-500" style="width: 0%"></div></div>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1 text-emerald-900"><span>💧 Water Level</span><span id="waterValue">0%</span></div>
+              <div class="h-2.5 bg-emerald-50 rounded-full overflow-hidden"><div id="waterBar" class="stat-bar-fill h-full bg-blue-500" style="width: 0%"></div></div>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1 text-emerald-900"><span>☀️ Sunlight</span><span id="sunlightValue">0%</span></div>
+              <div class="h-2.5 bg-emerald-50 rounded-full overflow-hidden"><div id="sunlightBar" class="stat-bar-fill h-full bg-orange-400" style="width: 0%"></div></div>
+            </div>
+            <div class="mb-6">
+              <div class="flex justify-between text-sm mb-1 text-emerald-900"><span>🌱 Growth</span><span id="growthValue">0%</span></div>
+              <div class="h-2.5 bg-emerald-50 rounded-full overflow-hidden"><div id="growthBar" class="stat-bar-fill h-full bg-emerald-600" style="width: 0%"></div></div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <button id="waterBtn" class="btn-action w-full flex items-center justify-center gap-3 bg-blue-50/60 hover:bg-blue-50 text-blue-600 px-6 py-3.5 rounded-xl font-medium border border-blue-100 text-sm">💧 Water Plant</button>
+            <button id="sunBtn" class="btn-action w-full flex items-center justify-center gap-3 bg-amber-50/60 hover:bg-amber-50 text-amber-700 px-6 py-3.5 rounded-xl font-medium border border-amber-100 text-sm">☀️ Give Sunlight</button>
+            <button id="pruneBtn" class="btn-action w-full flex items-center justify-center gap-3 bg-rose-50/40 hover:bg-rose-50 text-rose-600 px-6 py-3.5 rounded-xl font-medium border border-rose-100 text-sm">✂️ Prune Plant</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  const plantConfigs = {
+    monstera: { name: 'Monstera Monty', color: '#1e3f20', leafColor: '#2e6f40', type: 'split' },
+    peachlily: { name: 'Peace Lily Piper', color: '#143d1f', leafColor: '#1b5e20', type: 'lily' },
+    bonsai: { name: 'Bonsai Money Tree', color: '#224d28', leafColor: '#33691e', type: 'round' },
+    anthurium: { name: 'Anthurium Pink', color: '#8d6e63', leafColor: '#e91e63', type: 'heart' }
+  };
+
+  const state = { water: 0, sunlight: 0, growth: 0, level: 0, exp: 0, happiness: 0, selectedPlant: null, isAppreciating: false };
+
+  const elements = {
+    welcomePage: document.getElementById('welcomePage'),
+    startGameBtn: document.getElementById('startGameBtn'),
+    selectionPage: document.getElementById('selectionPage'),
+    carePage: document.getElementById('carePage'),
+    waterBar: document.getElementById('waterBar'), waterValue: document.getElementById('waterValue'),
+    sunlightBar: document.getElementById('sunlightBar'), sunlightValue: document.getElementById('sunlightValue'),
+    growthBar: document.getElementById('growthBar'), growthValue: document.getElementById('growthValue'),
+    levelBar: document.getElementById('levelBar'), levelValue: document.getElementById('levelValue'),
+    expBar: document.getElementById('expBar'), expValue: document.getElementById('expValue'),
+    happinessBar: document.getElementById('happinessBar'), happinessValue: document.getElementById('happinessValue'),
+    plantNameLabel: document.getElementById('plantNameLabel'),
+    backToSelectBtn: document.getElementById('backToSelectBtn'),
+    rewardPopup: document.getElementById('rewardPopup'),
+    badgeTitle: document.getElementById('badgeTitle'),
+    messageToast: document.getElementById('messageToast'),
+    canvas: document.getElementById('plantCanvas2D'),
+    waterBtn: document.getElementById('waterBtn'), sunBtn: document.getElementById('sunBtn'), pruneBtn: document.getElementById('pruneBtn')
+  };
+
+  const ctx = elements.canvas.getContext('2d');
+
+  function drawPlant2D() {
+    ctx.clearRect(0, 0, elements.canvas.width, elements.canvas.height);
+    if (!state.selectedPlant) return;
+    const config = plantConfigs[state.selectedPlant];
+    const centerX = elements.canvas.width / 2;
+    const bottomY = elements.canvas.height - 40;
+
+    ctx.fillStyle = '#b66a50';
+    ctx.beginPath();
+    ctx.moveTo(centerX - 55, bottomY - 100);
+    ctx.lineTo(centerX + 55, bottomY - 100);
+    ctx.lineTo(centerX + 40, bottomY);
+    ctx.lineTo(centerX - 40, bottomY);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#c57d63';
+    ctx.fillRect(centerX - 60, bottomY - 112, 120, 12);
+
+    // Ketinggian lukisan batang pokok kini mengikut nilai bar Growth tulen
+    const stemHeight = 40 + (state.growth * 1.5);
+    const stemTopY = (bottomY - 112) - stemHeight;
+
+    ctx.strokeStyle = state.selectedPlant === 'bonsai' ? '#795548' : '#388e3c';
+    ctx.lineWidth = state.selectedPlant === 'bonsai' ? 14 : 8;
+    ctx.lineCap = 'round';
+    
+    if (state.level > 0 || state.growth > 0) {
+      ctx.beginPath();
+      ctx.moveTo(centerX, bottomY - 110);
+      ctx.lineTo(centerX, stemTopY);
+      ctx.stroke();
+
+      const numLeaves = 2 + (state.level * 2);
+      ctx.fillStyle = config.leafColor;
+      for (let i = 0; i < numLeaves; i++) {
+        const fraction = i / numLeaves;
+        const leafY = (bottomY - 110) - (stemHeight * fraction * 1.1);
+        const isLeft = i % 2 === 0;
+        ctx.save();
+        ctx.translate(centerX, leafY);
+        if (config.type === 'split') {
+          ctx.rotate(isLeft ? -0.4 : 0.4);
+          drawMonsteraLeaf(ctx, isLeft);
+        } else if (config.type === 'heart') {
+          ctx.rotate(isLeft ? -0.5 : 0.5);
+          drawHeartLeaf(ctx, isLeft);
+        } else if (config.type === 'round') {
+          ctx.rotate(isLeft ? -0.3 : 0.3);
+          drawRoundLeaf(ctx, isLeft);
+        } else {
+          ctx.rotate(isLeft ? -0.3 : 0.3);
+          drawLilyLeaf(ctx, isLeft);
+        }
+        ctx.restore();
+      }
+    }
+
+    // Hanya keluar bunga/buah apabila Growth sudah mutlak 100%
+    if (state.level === 3 && state.growth === 100) {
+      if (config.type === 'lily') {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.ellipse(centerX, stemTopY - 15, 12, 25, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffeb3b';
+        ctx.fillRect(centerX - 2, stemTopY - 30, 4, 20);
+      } else if (config.type === 'heart') {
+        ctx.fillStyle = '#ff4081';
+        ctx.beginPath();
+        ctx.arc(centerX, stemTopY - 15, 12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  function drawLilyLeaf(c, isLeft) {
+    c.beginPath();
+    c.ellipse(isLeft ? -35 : 35, -5, 35, 14, 0, 0, Math.PI * 2);
+    c.fill();
+  }
+
+  function drawMonsteraLeaf(c, isLeft) {
+    c.beginPath();
+    if (isLeft) {
+      c.moveTo(0, 0); c.lineTo(-50, -40); c.lineTo(-45, -20); c.lineTo(-65, 0); c.lineTo(-45, 15); c.lineTo(0, 0);
+    } else {
+      c.moveTo(0, 0); c.lineTo(50, -40); c.lineTo(45, -20); c.lineTo(65, 0); c.lineTo(45, 15); c.closePath();
+    }
+    c.fill();
+  }
+
+  function drawHeartLeaf(c, isLeft) {
+    c.beginPath();
+    const side = isLeft ? -1 : 1;
+    c.moveTo(0,0);
+    c.bezierCurveTo(side*30, -30, side*45, 10, 0, 40);
+    c.bezierCurveTo(side*10, 10, 0, 0, 0, 0);
+    c.fill();
+  }
+
+  function drawRoundLeaf(c, isLeft) {
+    c.beginPath();
+    c.arc(isLeft ? -25 : 25, -10, 18, 0, Math.PI*2);
+    c.fill();
+  }
+
+  function showMessage(text) {
+    elements.messageToast.textContent = text;
+    elements.messageToast.classList.remove('opacity-0', 'pointer-events-none');
+    elements.messageToast.classList.add('message-toast');
+    setTimeout(() => {
+      elements.messageToast.classList.remove('message-toast');
+      elements.messageToast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2500);
+  }
+
+  function selectPlant(key) {
+    state.selectedPlant = key;
+    elements.plantNameLabel.textContent = plantConfigs[key].name;
+    elements.selectionPage.classList.add('hidden');
+    elements.carePage.classList.remove('hidden');
+    drawPlant2D();
+    updateUI();
+    showMessage(`${plantConfigs[key].name} chosen! 🌱`);
+  }
+
+  function goBackToSelection() {
+    elements.carePage.classList.add('hidden');
+    elements.selectionPage.classList.remove('hidden');
+    resetStats();
+  }
+
+  // --- LOGIK BAHARU: KEMAS KINI STATUS & PENGIRAAN GROWTH ---
+  function handleAction(action) {
+    if (!state.selectedPlant || state.isAppreciating) return;
+
+    // Tambah status tanpa sekatan maksima berasaskan XP
+    if (action === 'water') {
+      state.water = Math.min(100, state.water + 10);
+      if (state.exp < 150) state.exp = Math.min(150, state.exp + 10);
+      showMessage("Refreshing Water! 💧");
+    } else if (action === 'sun') {
+      state.sunlight = Math.min(100, state.sunlight + 10);
+      if (state.exp < 150) state.exp = Math.min(150, state.exp + 10);
+      showMessage("Yes I got sunlight! ☀️");
+    } else if (action === 'prune') {
+      state.happiness = Math.min(100, state.happiness + 20);
+      if (state.exp < 150) state.exp = Math.min(150, state.exp + 10);
+      showMessage("Damaged leaves are cut off! ✂️");
+    }
+
+    // Set Level secara dinamik mengikut XP terkumpul
+    if (state.exp >= 150) {
+      state.level = 3;
+    } else if (state.exp >= 100) {
+      state.level = 2;
+    } else if (state.exp >= 50) {
+      state.level = 1;
+    } else {
+      state.level = 0;
+    }
+
+    // FORMULA BARU LOGIK GROWTH: Purata Status + Level Pokok
+    // Growth hanya akan cecah 100% jika Level=3 DAN Water=100 DAN Sunlight=100 DAN Happiness=100
+    const avgStatus = (state.water + state.sunlight + state.happiness) / 3;
+    const levelFactor = (state.level / 3) * 100;
+    state.growth = Math.floor((levelFactor * 0.7) + (avgStatus * 0.3));
+
+    // Pengaman tambahan: Sekat jika status penuh tetapi belum capai Level 3
+    if (state.level < 3 && state.growth > 90) {
+      state.growth = 90;
+    }
+
+    // Syarat Mutlak Kemenangan: Semua wajib bernilai 100%
+    if (
+      state.level === 3 && 
+      state.water === 100 && 
+      state.sunlight === 100 && 
+      state.happiness === 100
+    ) {
+      state.growth = 100; // Force jadikan 100% tepat bila semua syarat dipenuhi
+      drawPlant2D();
+      updateUI();
+      triggerCompletion();
+      return;
+    }
+
+    drawPlant2D();
+    updateUI();
+  }
+
+  function triggerCompletion() {
+    state.isAppreciating = true;
+    elements.badgeTitle.textContent = `${plantConfigs[state.selectedPlant].name} Emblem!`;
+    elements.rewardPopup.classList.add('show');
+    setTimeout(() => {
+      elements.rewardPopup.classList.remove('show');
+      goBackToSelection();
+    }, 4000);
+  }
+
+  function updateUI() {
+    elements.waterBar.style.width = `${state.water}%`;
+    elements.waterValue.textContent = `${state.water}%`;
+    elements.sunlightBar.style.width = `${state.sunlight}%`;
+    elements.sunlightValue.textContent = `${state.sunlight}%`;
+    elements.growthBar.style.width = `${state.growth}%`;
+    elements.growthValue.textContent = `${state.growth}%`;
+    elements.happinessBar.style.width = `${state.happiness}%`;
+    elements.happinessValue.textContent = `${state.happiness}%`;
+    
+    elements.expBar.style.width = `${(state.exp / 150) * 100}%`;
+    elements.expValue.textContent = `${state.exp}/150`;
+    
+    elements.levelBar.style.width = `${(state.level / 3) * 100}%`;
+    elements.levelValue.textContent = `${state.level} - ${state.level === 3 ? 'Mature Plant' : state.level === 2 ? 'Sprout' : state.level === 1 ? 'Seedling' : 'Seeds'}`;
+  }
+
+  function resetStats() {
+    state.water = 0; state.sunlight = 0; state.growth = 0; state.level = 0; state.exp = 0;
+    state.happiness = 0; state.selectedPlant = null; state.isAppreciating = false;
+  }
+
+  window.onload = () => {
+    elements.startGameBtn.addEventListener('click', () => {
+      elements.welcomePage.classList.add('hidden');
+      elements.selectionPage.classList.remove('hidden');
+    });
+    document.querySelectorAll('.plant-choice').forEach(btn => btn.addEventListener('click', () => selectPlant(btn.dataset.plant)));
+    elements.backToSelectBtn.addEventListener('click', goBackToSelection);
+    elements.waterBtn.addEventListener('click', () => handleAction('water'));
+    elements.sunBtn.addEventListener('click', () => handleAction('sun'));
+    elements.pruneBtn.addEventListener('click', () => handleAction('prune'));
+  };
+  </script>
+</body>
+</html>
